@@ -55,7 +55,7 @@ const populateDisplay = () => {
 
     for (let operator of operators) {
         operator.addEventListener("click", () => {
-            if (display.textContent.match(/[\+\-\x\:]/)) {
+            if (display.textContent.charAt(0) !== '-' && display.textContent.match(/[\+\-\x\:]/)) {
                 operator.classList.toggle('disabled');
             } else {
             display.textContent += operator.textContent; 
@@ -66,24 +66,27 @@ const populateDisplay = () => {
 
 const equalButton = document.getElementById("op-equals");
 equalButton.addEventListener("click", () => {
-    const regex = /(\d+)([+-x:])(\d+)/g;
+    const regex = /(-?\d+)([+-x:])(-?\d+)/g;
     let result = 0;
     let arrayOfResult = [];
 
     while ((result = regex.exec(display.textContent)) !== null) {
-        arrayOfResult.push(parseInt(result[1]), result[2], parseInt(result[3]));
+        arrayOfResult.push(parseInt(result[1], 10), result[2], parseInt(result[3], 10));
     }
     firstNumber = arrayOfResult[0];
     secondNumber = arrayOfResult[2];
     operator = arrayOfResult[1];
 
-    if (secondNumber === 0 && operator === ":") {
+    if (firstNumber === undefined || secondNumber === undefined || operator === undefined || secondNumber === 0 && operator === ":") {
         display.textContent = "error";
         setTimeout(() => {
             display.textContent = ""; 
         }, 1000); 
     } else {
     result = operate(firstNumber, secondNumber, operator);
+    if (typeof result === 'number') {
+        result = result.toFixed(2);
+    }
     display.textContent = result;
     }
 
@@ -91,7 +94,6 @@ equalButton.addEventListener("click", () => {
     console.log(result);
 
 });
-
-
+ 
 populateDisplay();
 clear();
