@@ -25,9 +25,9 @@ const operate = (firstNumber, secondNumber, operator) => {
         return add(firstNumber, secondNumber);
     } else if (operator === '-') {
         return sub(firstNumber, secondNumber);
-    } else if (operator === '*') {
+    } else if (operator === 'x') {
         return mult(firstNumber, secondNumber); 
-    } else if (operator === '/') {
+    } else if (operator === ':') {
         return div(firstNumber, secondNumber);
     }
 };
@@ -46,13 +46,20 @@ const populateDisplay = () => {
         
     for (let digit of digits) {
         digit.addEventListener("click", () => {
-            display.textContent += digit.textContent; 
+            if (digit.id !== "op-equals") {
+                display.textContent += digit.textContent;
+            }
+            
         });
     }
 
     for (let operator of operators) {
         operator.addEventListener("click", () => {
+            if (display.textContent.match(/[\+\-\x\:]/)) {
+                operator.classList.toggle('disabled');
+            } else {
             display.textContent += operator.textContent; 
+            }
         });
     }
 };
@@ -60,7 +67,7 @@ const populateDisplay = () => {
 const equalButton = document.getElementById("op-equals");
 equalButton.addEventListener("click", () => {
     const regex = /(\d+)([+-x:])(\d+)/g;
-    let result;
+    let result = 0;
     let arrayOfResult = [];
 
     while ((result = regex.exec(display.textContent)) !== null) {
@@ -68,9 +75,20 @@ equalButton.addEventListener("click", () => {
     }
     firstNumber = arrayOfResult[0];
     secondNumber = arrayOfResult[2];
-    operator = arrayOfResult[1],
+    operator = arrayOfResult[1];
+
+    if (secondNumber === 0 && operator === ":") {
+        display.textContent = "error";
+        setTimeout(() => {
+            display.textContent = ""; 
+        }, 1000); 
+    } else {
     result = operate(firstNumber, secondNumber, operator);
     display.textContent = result;
+    }
+
+    console.log(arrayOfResult);
+    console.log(result);
 
 });
 
