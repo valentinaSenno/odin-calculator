@@ -56,5 +56,24 @@ const populateDisplay = () => {
         });
     }
 };
+
+const equalButton = document.getElementById("op-equals");
+equalButton.addEventListener("click", () => {
+    const regex = /(\d+)([+-x:])(\d+)/g;
+    let result;
+    let arrayOfResult = [];
+
+    while ((result = regex.exec(display.textContent)) !== null) {
+        arrayOfResult.push(parseInt(result[1]), result[2], parseInt(result[3]));
+    }
+    firstNumber = arrayOfResult[0];
+    secondNumber = arrayOfResult[2];
+    operator = arrayOfResult[1],
+    result = operate(firstNumber, secondNumber, operator);
+    display.textContent = result;
+
+});
+
+
 populateDisplay();
 clear();
