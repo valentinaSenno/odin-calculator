@@ -1,3 +1,5 @@
+const display = document.getElementById("display");
+
 const add = (firstNumber, secondNumber) => {
     return firstNumber + secondNumber;
 }
@@ -29,5 +31,30 @@ const operate = (firstNumber, secondNumber, operator) => {
         return div(firstNumber, secondNumber);
     }
 };
-console.log(operate(2, 3, '+'));
 
+
+const clear = () => {
+const clearButton = document.getElementById("dig-clear");
+clearButton.addEventListener("click", () => {
+    display.innerText = "";
+});
+};
+
+const populateDisplay = () => {
+    const digits = document.getElementsByClassName("digit");
+    const operators = document.getElementsByClassName("operator");
+        
+    for (let digit of digits) {
+        digit.addEventListener("click", () => {
+            display.textContent += digit.textContent; 
+        });
+    }
+
+    for (let operator of operators) {
+        operator.addEventListener("click", () => {
+            display.textContent += operator.textContent; 
+        });
+    }
+};
+populateDisplay();
+clear();
